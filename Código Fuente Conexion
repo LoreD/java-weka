@@ -1,0 +1,55 @@
+# java-weka
+conexion de java con la libreria weka
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package wekap;
+
+import java.io.*;
+import java.util.*;
+import java.applet.*;
+import java.awt.*;
+
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.core.Instances;
+
+/**
+ *
+ * @author Lore
+ */
+public class WekaP extends Applet {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) throws Exception {
+        // TODO code application logic here
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println(" ------------------------Naive Bayes--------------------------");
+        System.out.println("--------------------------------------------------------------");
+
+        BufferedReader leer;
+        leer = new BufferedReader(new FileReader("C:/Program Files/Weka-3-6/data/weather.numeric.arff"));
+
+        Instances n = new Instances(leer);
+        n.setClassIndex(n.numAttributes() - 1);
+        leer.close();
+
+        NaiveBayes nb = new NaiveBayes();
+
+        nb.buildClassifier(n);
+
+        Evaluation eval = new Evaluation(n);
+        eval.crossValidateModel(nb, n, 10, new Random(1));
+        System.out.println("----------Naive Bayes Porcentajes-------");
+        System.out.println(eval.toSummaryString("\n=============Resultados=============\n", false));
+        System.out.println(eval.toClassDetailsString());
+        System.out.println(eval.toMatrixString());
+    }
+}
